@@ -13,7 +13,7 @@ require (
 	github.com/lib/pq v1.10.5
 	github.com/lifei6671/gocaptcha v0.2.0
 	github.com/mattn/go-runewidth v0.0.13
-	github.com/mattn/go-sqlite3 v1.14.15
+	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/russross/blackfriday/v2 v2.1.0
 )

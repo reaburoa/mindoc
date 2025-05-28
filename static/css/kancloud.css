@@ -576,6 +576,17 @@ table>tbody>tr:hover {
     padding: 5px;
 }
 
+.manual-article .wiki-bottom-left {
+    border-top: 1px solid #E5E5E5;
+    line-height: 25px;
+    color: #333;
+    text-align: left;
+    font-size: 12px;
+    margin-bottom: 20px;
+    margin-top: 30px;
+    padding: 5px;
+}
+
 .manual-article .jump-top .view-backtop {
     position: fixed;
     bottom: -30px;
@@ -785,6 +796,13 @@ table>tbody>tr:hover {
 .m-comment .comment-item .info {
     height: 24px;
     line-height: 24px
+}
+
+.m-comment .comment-item .info img {
+    height: 22px;
+    border-radius: 50%;
+    margin-right: 4px;
+    display: ruby;
 }
 
 .m-comment .comment-item .vote {

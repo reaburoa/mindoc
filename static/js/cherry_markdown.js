@@ -131,6 +131,40 @@ $(function () {
         onClick: showHistory,
     });
 
+    let customMenuTools =  Cherry.createMenuHook('工具',  {
+        iconName: '',
+        subMenuConfig: [
+            {
+                iconName: 'word',
+                name: 'Word转笔记',
+                onclick: ()=>{
+                    let converter = new WordToHtmlConverter();
+                    converter.handleFileSelect(function (response) {
+                        if (response.messages.length) {
+                            let messages = response.messages.map((item)=>{
+                                return item.message + "<br/>";
+                            }).join('\n');
+                            layer.msg(messages);
+                        }
+                        converter.replaceHtmlBase64(response.value).then((html)=>{
+                            window.editor.insertValue(html);
+                        });
+                    })
+                }
+            },
+            {
+                noIcon: true,
+                name: 'Htm转Markdown',
+                onclick: ()=>{
+                    let converter = new HtmlToMarkdownConverter();
+                    converter.handleFileSelect(function (response) {
+                        window.editor.insertValue(response);
+                    })
+                }
+            }
+        ]
+    });
+
 
     var basicConfig = {
         id: 'manualEditorContainer',
@@ -226,6 +260,7 @@ $(function () {
                 'switchModel',
                 'export',
                 'customMenuFName',
+                'customMenuToolsName'
             ],
             bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', 'ruby', '|', 'size', 'color'], // array or false
             sidebar: ['mobilePreview', 'copy', 'codeTheme', 'theme'],
@@ -236,6 +271,7 @@ $(function () {
                 customMenuDName: customMenuD,
                 customMenuEName: customMenuE,
                 customMenuFName: customMenuF,
+                customMenuToolsName: customMenuTools,
             },
         },
         drawioIframeUrl: '/static/cherry/drawio_demo.html',
@@ -601,6 +637,13 @@ $(function () {
         }
         $("#documentTemplateModal").modal('hide');
     });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.key === 's') {
+            event.preventDefault();
+            saveDocument(true, null);
+        }
+    });
 });
 
 function myFileUpload(file, callback) {
@@ -612,6 +655,7 @@ function myFileUpload(file, callback) {
     $.ajax({
         url: window.fileUploadURL, // 确保此 URL 是文件上传 API 的正确 URL
         type: "POST",
+        async: false, // 3xxx 20240609这里修改为同步，保证cherry批量上传图片时，插入的图片名称是正确的，否则，插入的图片名称都是最后一个名称
         dataType: "json",
         data: formData,
         processData: false, // 必须设置为 false，因为数据是 FormData 对象，不需要对数据进行序列化处理
@@ -629,6 +673,7 @@ function myFileUpload(file, callback) {
         },
         success: function (data) {
             layer.close(layerIndex);
+            // 验证data是否为数组
             if (data.errcode !== 0) {
                 layer.msg(data.message);
             } else {
